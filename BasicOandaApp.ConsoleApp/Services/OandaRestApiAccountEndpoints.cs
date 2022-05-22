@@ -62,4 +62,35 @@ internal partial class OandaRestApi
 
         return result?.Instruments ?? throw new NullReferenceException();
     }
+
+    public async Task DumpTradableInstrumentListAsync(string accountId, string filePath)
+    {
+        string? fullFilePath = Path.GetFullPath(filePath);
+
+        Console.WriteLine(fullFilePath);
+
+        string? fullFileDirectoryPath = Path.GetDirectoryName(fullFilePath);
+
+        if (fullFileDirectoryPath != null && !Directory.Exists(fullFileDirectoryPath))
+        {
+            Directory.CreateDirectory(fullFileDirectoryPath);
+        }
+
+        string url = $"/v3/accounts/{accountId}/instruments";
+
+        using HttpResponseMessage? httpResponse = await httpClient.GetAsync(url);
+
+        httpResponse.EnsureSuccessStatusCode();
+
+        using Stream? strm = await httpResponse.Content.ReadAsStreamAsync();
+
+        using StreamReader streamReader = new StreamReader(strm);
+
+        using StreamWriter sw = new StreamWriter(fullFileDirectoryPath, false);
+
+        sw.AutoFlush = true;
+
+        await sw.WriteAsync(await streamReader.ReadToEndAsync());
+        
+    }
 }
