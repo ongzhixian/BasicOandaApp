@@ -1,40 +1,44 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using BasicOandaApp.ConsoleApp;
+using Microsoft.Extensions.Configuration;
+using NLog;
 using Oanda.RestApi.Models;
 using Oanda.RestApi.Services;
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-Console.WriteLine("Hello, World!");
+var log = AppState.Log = LogManager.GetCurrentClassLogger();
 
-const string APP_SETTINGS_CONFIGURATION_FILE = "appsettings.json";
+//const string APP_SETTINGS_CONFIGURATION_FILE = "appsettings.json";
 
-const string OANDA_PRACTICE_API_KEY_CONFIGURATION_KEY = "oanda:practice:ApiKey";
-const string OANDA_ACCOUNT_ID_CONFIGURATION_KEY = "oanda:account:id";
-const string OANDA_REST_API_URL_CONFIGURATION_KEY = "oanda:restApiUrl";
-const string OANDA_STREAMING_API_URL_CONFIGURATION_KEY = "oanda:streamingApiUrl";
+//const string OANDA_PRACTICE_API_KEY_CONFIGURATION_KEY = "oanda:practice:ApiKey";
+//const string OANDA_ACCOUNT_ID_CONFIGURATION_KEY = "oanda:account:id";
+//const string OANDA_REST_API_URL_CONFIGURATION_KEY = "oanda:restApiUrl";
+//const string OANDA_STREAMING_API_URL_CONFIGURATION_KEY = "oanda:streamingApiUrl";
 
-IConfiguration configuration = new ConfigurationBuilder()
-    .AddJsonFile(APP_SETTINGS_CONFIGURATION_FILE, optional: false, reloadOnChange: true)
-    .AddUserSecrets(Assembly.GetExecutingAssembly(), true)
-    .Build();
+//IConfiguration configuration = AppState.Configuration = new ConfigurationBuilder()
+//    .AddJsonFile(APP_SETTINGS_CONFIGURATION_FILE, optional: false, reloadOnChange: true)
+//    .AddUserSecrets(Assembly.GetExecutingAssembly(), true)
+//    .Build();
 
-string OANDA_REST_API_URL = configuration[OANDA_REST_API_URL_CONFIGURATION_KEY];
 
-string OANDA_STREAMING_API_URL = configuration[OANDA_STREAMING_API_URL_CONFIGURATION_KEY];
+//string OANDA_REST_API_URL = configuration[OANDA_REST_API_URL_CONFIGURATION_KEY];
 
-string OANDA_ACCOUNT_ID = configuration[OANDA_ACCOUNT_ID_CONFIGURATION_KEY];
+//string OANDA_STREAMING_API_URL = configuration[OANDA_STREAMING_API_URL_CONFIGURATION_KEY];
 
-Console.WriteLine($"{nameof(OANDA_REST_API_URL)} = {OANDA_REST_API_URL}");
+//string OANDA_ACCOUNT_ID = configuration[OANDA_ACCOUNT_ID_CONFIGURATION_KEY];
 
-Console.WriteLine($"{nameof(OANDA_ACCOUNT_ID)} = {OANDA_ACCOUNT_ID}");
+//Console.WriteLine($"{nameof(OANDA_REST_API_URL)} = {OANDA_REST_API_URL}");
+
+//Console.WriteLine($"{nameof(OANDA_ACCOUNT_ID)} = {OANDA_ACCOUNT_ID}");
 
 // API
 
-OandaRestApi restApi = new OandaRestApi(
-    OANDA_REST_API_URL,
-    OANDA_STREAMING_API_URL,
-    configuration[OANDA_PRACTICE_API_KEY_CONFIGURATION_KEY]);
+//OandaRestApi restApi = AppState.OandaRestApi
+//    = new OandaRestApi(
+//    OANDA_REST_API_URL,
+//    OANDA_STREAMING_API_URL,
+//    configuration[OANDA_PRACTICE_API_KEY_CONFIGURATION_KEY]);
 
 //await restApi.GetAccountDetailsAsync(OANDA_ACCOUNT_ID);
 //var instruments =  await restApi.GetTradableInstrumentListAsync(OANDA_ACCOUNT_ID);
@@ -61,8 +65,6 @@ OandaRestApi restApi = new OandaRestApi(
 //Console.WriteLine(jsonText);
 
 
-
-
 //await restApi.GetPricingStreamAsync(OANDA_ACCOUNT_ID, new List<string>
 //{
 //    "EUR_USD", "XAU_USD"
@@ -70,7 +72,7 @@ OandaRestApi restApi = new OandaRestApi(
 
 
 //var x = new MarketOrderRequest(1, "XAU_USD"); //OK
-var x = new LimitOrderRequest(1, "XAU_USD", 1803.855M, "GTC", 1803.820M, 1804.100M);
+//var x = new LimitOrderRequest(1, "XAU_USD", 1803.855M, "GTC", 1803.820M, 1804.100M);
 
 //JsonSerializerOptions opt = new(JsonSerializerDefaults.Web)
 //{
@@ -87,7 +89,27 @@ var x = new LimitOrderRequest(1, "XAU_USD", 1803.855M, "GTC", 1803.820M, 1804.10
 
 //Console.WriteLine(tx2);
 
-await restApi.AddOrderAsync(OANDA_ACCOUNT_ID, x);
+//await restApi.AddOrderAsync(OANDA_ACCOUNT_ID, x);
 
-Console.WriteLine("Press <ENTER> to exit.");
-Console.ReadLine();
+
+
+
+
+try
+{
+    await InitializationSequence.RunAsync();
+
+    //var accountList = await restApi.GetAccountListAsync();
+}
+catch (Exception ex)
+{
+    log.Error(ex, "Stopped program because of exception");
+    throw;
+}
+finally
+{
+    LogManager.Shutdown();
+}
+
+//Console.WriteLine("Press <ENTER> to exit.");
+//Console.ReadLine();

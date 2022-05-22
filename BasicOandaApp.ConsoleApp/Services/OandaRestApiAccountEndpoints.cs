@@ -26,7 +26,7 @@ internal partial class OandaRestApi
         return result.Accounts;
     }
 
-    public async Task GetAccountDetailsAsync(string accountId)
+    public async Task<Account> GetAccountDetailsAsync(string accountId)
     {
         string url = $"/v3/accounts/{accountId}";
 
@@ -36,19 +36,13 @@ internal partial class OandaRestApi
 
         using Stream? strm = await httpResponse.Content.ReadAsStreamAsync();
 
-        await DumpAsync(strm);
+        // TODO: await DumpAsync(strm);
 
-        // TODO: 
+        Account? result = await JsonSerializer.DeserializeAsync<Account>(strm, jsonSerializerOptions);
 
-        //AccountList? result =
-        //    await JsonSerializer.DeserializeAsync<AccountList>(strm, jsonSerializerOptions);
+        log.Info("Account information {result}", result == null ? "MISSING" : "OK");
 
-        //if (result == null)
-        //{
-        //    return new List<AccountProperties>();
-        //}
-
-        //return result.Accounts;
+        return result ?? throw new NullReferenceException();
     }
 
     public async Task<IEnumerable<Instrument>> GetTradableInstrumentListAsync(string accountId)
@@ -64,11 +58,8 @@ internal partial class OandaRestApi
         InstrumentList? result =
             await JsonSerializer.DeserializeAsync<InstrumentList>(strm, jsonSerializerOptions);
 
-        if (result == null || result.Instruments == null)
-        {
-            return new List<Instrument>();
-        }
+        log.Info("Tradable instruments information {result}", result?.Instruments == null ? "MISSING" : "OK");
 
-        return result.Instruments;
+        return result?.Instruments ?? throw new NullReferenceException();
     }
 }

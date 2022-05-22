@@ -1,4 +1,5 @@
-﻿using Oanda.RestApi.Models;
+﻿using NLog;
+using Oanda.RestApi.Models;
 using System.Net.Http.Headers;
 using System.Net.Mime;
 using System.Text.Json;
@@ -15,6 +16,8 @@ internal partial class OandaRestApi
     private readonly JsonSerializerOptions jsonSerializerOptions;
 
     private readonly JsonSerializerOptions orderSerializerOptions;
+
+    private readonly Logger log = LogManager.GetCurrentClassLogger();
 
     public OandaRestApi(string oandaRestApiUrl, string oandaStreamingApiUrl,  string oandaApiKey)
     {
@@ -39,7 +42,7 @@ internal partial class OandaRestApi
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         };
     }
-    private static async Task DumpAsync(Stream? strm)
+    private static async Task DumpAsync(Stream? strm, string? filePath = null)
     {
         if (strm == null)
         {
@@ -49,6 +52,29 @@ internal partial class OandaRestApi
         using StreamReader streamReader = new StreamReader(strm);
         string streamContent = await streamReader.ReadToEndAsync();
         Console.WriteLine(streamContent);
+
+        DumpToFile(filePath, streamContent);
+    }
+
+    private static void DumpToFile(string? filePath, string streamContent)
+    {
+        if (filePath != null)
+        {
+            string? fullFilePath = Path.GetFullPath(filePath);
+
+            Console.WriteLine(fullFilePath);
+
+            string? fullFileDirectoryPath = Path.GetDirectoryName(fullFilePath);
+
+            if (fullFileDirectoryPath != null && !Directory.Exists(fullFileDirectoryPath))
+            {
+                Directory.CreateDirectory(fullFileDirectoryPath);
+            }
+
+            using StreamWriter sw = new StreamWriter(filePath, true);
+            sw.AutoFlush = true;
+            sw.Write(streamContent);
+        }
     }
 
     private static async Task SaveToFileAsync(Stream? strm, string filePath)

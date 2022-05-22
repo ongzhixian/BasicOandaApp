@@ -21,3 +21,11 @@ internal class AccountList
     [JsonPropertyName("accounts")]
     public IEnumerable<AccountProperties>? Accounts { get; set; }
 }
+
+internal class Account
+{
+    // Note: Incomplete implementation
+
+    [JsonPropertyName("id")]
+    public string Id { get; set; }
+}

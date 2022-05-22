@@ -12,7 +12,9 @@ dotnet add .\BasicOandaApp.ConsoleApp\ package Microsoft.Extensions.Configuratio
 dotnet add .\BasicOandaApp.ConsoleApp\ package Microsoft.Extensions.Configuration.UserSecrets
 dotnet add .\BasicOandaApp.ConsoleApp\ package Microsoft.Extensions.Configuration.Json
 
-Microsoft.Extensions.Http 
+dotnet add .\BasicOandaApp.ConsoleApp\ package NLog
+
+Microsoft.Extensions.Http
 
 dotnet user-secrets --project .\BasicOandaApp.ConsoleApp\ init
 dotnet user-secrets --project .\BasicOandaApp.ConsoleApp\ set "oanda:practice:ApiKey" "<api-key>"
@@ -31,7 +33,26 @@ Microsoft.Extensions.Configuration.Binder
 Microsoft.Extensions.Configuration.EnvironmentVariables
 ```
 
-## 
+## Secrets
+
+Secrets that required by application
+
+`"oanda:practice:ApiKey" "<api-key>"`
+
+An Oanda REST API key; example value:
+
+999af5dbe42ea92d0b5f4ae6450aa91a-999ae01ca759db0c5d6cf35651674bfd
+
+`"oanda:account:id" "<account-id>"`
+
+An Oanda account id; example value:
+
+999-999-11176018-999
+
+
+
+
+## Urls used by Oanda REST APIs
 
 "Oanda": {
     "test": {
@@ -43,3 +64,5 @@ Microsoft.Extensions.Configuration.EnvironmentVariables
         "streamingApiUrl": "https://stream-fxtrade.oanda.com/"
     }
 }
+
+Reference: https://developer.oanda.com/rest-live-v20/development-guide/
