@@ -8,26 +8,11 @@ internal static class InitializationSequence
 {
     private static readonly Logger log = LogManager.GetCurrentClassLogger();
 
-    private static readonly IConfiguration configuration;
+    // private static readonly IConfiguration configuration = AppState.Configuration;
 
-    private static readonly OandaRestApi restApi;
+    private static readonly OandaRestApi restApi = AppState.OandaRestApi;
 
-    private static readonly string dataDirectoryPath;
-
-    static InitializationSequence()
-    {
-        AppState.ReadConfigurationValues();
-
-        AppState.SetupApiClients();
-
-        AppState.SetupDataDirectory();
-
-        configuration = AppState.Configuration;
-
-        restApi = AppState.OandaRestApi;
-
-        dataDirectoryPath = AppState.DataDirectoryPath;
-    }
+    private static readonly string dataDirectoryPath = AppState.DataDirectoryPath;
 
     internal static async Task RunAsync()
     {
@@ -42,14 +27,16 @@ internal static class InitializationSequence
 
     private static void CreateDataPathIfNotExists(string dataPath)
     {
-        if (!Directory.Exists(dataPath))
+        if (Directory.Exists(dataPath))
         {
-            Directory.CreateDirectory(dataPath);
+            log.Info("{dataPath} exists.", dataPath);
 
-            log.Info("{dataPath} created.", dataPath);
+            return;
         }
 
-        log.Info("{dataPath} exists.", dataPath);
+        Directory.CreateDirectory(dataPath);
+
+        log.Info("{dataPath} created.", dataPath);
     }
 
     private static async Task GetTradingAccountDetailAsync()
