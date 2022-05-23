@@ -40,7 +40,7 @@ internal partial class OandaRestApi
 
         Account? result = await JsonSerializer.DeserializeAsync<Account>(strm, jsonSerializerOptions);
 
-        log.Info("Account information {result}", result == null ? "MISSING" : "OK");
+        log.Info("{information} {result}", "Account information", result == null ? "MISSING" : "OK");
 
         return result ?? throw new NullReferenceException();
     }
@@ -58,7 +58,7 @@ internal partial class OandaRestApi
         InstrumentList? result =
             await JsonSerializer.DeserializeAsync<InstrumentList>(strm, jsonSerializerOptions);
 
-        log.Info("Tradable instruments information {result}", result?.Instruments == null ? "MISSING" : "OK");
+        log.Info("{information} {result}", "Tradable instruments information", result?.Instruments == null ? "MISSING" : "OK");
 
         return result?.Instruments ?? throw new NullReferenceException();
     }
