@@ -2,6 +2,7 @@
 using NLog;
 using Oanda.RestApi.Models;
 using Oanda.RestApi.Services;
+using System.Diagnostics;
 using System.Reflection;
 
 namespace BasicOandaApp.ConsoleApp;
@@ -34,6 +35,12 @@ internal static class AppState
         set => oandaRestApi = value;
     }
 
+    public static string Version
+    {
+        get => version ?? throw new NullReferenceException();
+        set => version = value;
+    }
+
     public static string OandaRestApiUrl
     {
         get => oandaRestApiUrl ?? throw new NullReferenceException();
@@ -57,6 +64,7 @@ internal static class AppState
         get => oandaPracticeApiKey ?? throw new NullReferenceException();
         set => oandaPracticeApiKey = value;
     }
+    
     public static string DataDirectoryPath
     {
         get => dataDirectoryPath ?? throw new NullReferenceException();
@@ -110,6 +118,31 @@ internal static class AppState
         AppState.OandaPracticeApiKey = GetConfigurationValue(OANDA_PRACTICE_API_KEY_CONFIGURATION_KEY);
     }
 
+    internal static void Initialize()
+    {
+        AppState.ReadVersion();
+
+        AppState.ReadConfigurationValues();
+
+        AppState.SetupApiClients();
+
+        AppState.SetupDataDirectory();
+    }
+
+    private static void ReadVersion()
+    {
+        var entryAssembly = Assembly.GetEntryAssembly();
+
+        if (entryAssembly != null)
+        {
+            FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(entryAssembly.Location);
+
+            version = fileVersionInfo.ProductVersion;
+        }
+
+        version ??= string.Empty;
+    }
+
     public static string GetConfigurationValue(string configurationKey)
     {
         string configurationValue = Configuration[configurationKey].Trim();
@@ -126,6 +159,7 @@ internal static class AppState
 
     private static Logger? log = null;
     private static OandaRestApi? oandaRestApi = null;
+    private static string? version = null;
     private static string? oandaRestApiUrl = null;
     private static string? oandaStreamingApiUrl = null;
     private static string? oandaAccountId = null;
