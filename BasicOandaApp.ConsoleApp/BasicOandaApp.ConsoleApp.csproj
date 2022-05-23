@@ -6,6 +6,15 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <UserSecretsId>f068005c-5990-4a9c-81e9-204a044ea686</UserSecretsId>
+	
+	<!-- Versioning (see: https://docs.microsoft.com/en-us/troubleshoot/developer/visualstudio/general/assembly-version-assembly-file-version)
+	AssemblyVersion Not displayed in file properties; Viewable using tools like dotpeek or when we get assembly full name; probably not needed
+	FileVersion     Display as File version    in file properties
+	Version         Display as Product version in file properties
+	-->
+	<FileVersion>1.0.1</FileVersion>
+	<Version>1.0.1+alpha</Version>
+	<Copyright>© Ong Zhi Xian. All rights reserved.</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
