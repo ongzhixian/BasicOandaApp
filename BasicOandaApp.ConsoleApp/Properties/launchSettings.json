@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "BasicOandaApp.ConsoleApp": {
+      "commandName": "Project",
+      "commandLineArgs": "--version --dump instruments --output ./dump"
+    }
+  }
+}
