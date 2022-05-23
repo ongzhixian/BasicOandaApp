@@ -1,4 +1,5 @@
-﻿using Oanda.RestApi.Models;
+﻿using BasicOandaApp.ConsoleApp;
+using Oanda.RestApi.Models;
 using System.Text.Json;
 
 namespace Oanda.RestApi.Services;
@@ -63,18 +64,9 @@ internal partial class OandaRestApi
         return result?.Instruments ?? throw new NullReferenceException();
     }
 
-    public async Task DumpTradableInstrumentListAsync(string accountId, string filePath)
+    public async Task<string> DumpTradableInstrumentListAsync()
     {
-        string? fullFilePath = Path.GetFullPath(filePath);
-
-        Console.WriteLine(fullFilePath);
-
-        string? fullFileDirectoryPath = Path.GetDirectoryName(fullFilePath);
-
-        if (fullFileDirectoryPath != null && !Directory.Exists(fullFileDirectoryPath))
-        {
-            Directory.CreateDirectory(fullFileDirectoryPath);
-        }
+        string accountId = AppState.OandaAccountId;
 
         string url = $"/v3/accounts/{accountId}/instruments";
 
@@ -85,12 +77,7 @@ internal partial class OandaRestApi
         using Stream? strm = await httpResponse.Content.ReadAsStreamAsync();
 
         using StreamReader streamReader = new StreamReader(strm);
-
-        using StreamWriter sw = new StreamWriter(fullFileDirectoryPath, false);
-
-        sw.AutoFlush = true;
-
-        await sw.WriteAsync(await streamReader.ReadToEndAsync());
         
+        return await streamReader.ReadToEndAsync();
     }
 }

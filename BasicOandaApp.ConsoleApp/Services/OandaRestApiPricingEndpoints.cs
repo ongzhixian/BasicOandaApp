@@ -1,4 +1,5 @@
-﻿using Oanda.RestApi.Models;
+﻿using BasicOandaApp.ConsoleApp;
+using Oanda.RestApi.Models;
 using System.Text;
 using System.Text.Json;
 
@@ -29,7 +30,6 @@ internal partial class OandaRestApi
         return result.CandleResponseList;
     }
 
-
     public async Task<IList<Candlestick>> GetInstrumentCandlesForAccountAsync(string accountId, string instrument)
     {
         string url = $"/v3/accounts/{accountId}/instruments/{instrument}/candles";
@@ -49,6 +49,23 @@ internal partial class OandaRestApi
         }
 
         return result.Candles;
+    }
+
+    public async Task<string> DumpInstrumentCandlesForAccountAsync(string instrument, string granularity)
+    {
+        string accountId = AppState.OandaAccountId;
+
+        string url = $"/v3/accounts/{accountId}/instruments/{instrument}/candles?granularity={granularity}";
+
+        using HttpResponseMessage? httpResponse = await httpClient.GetAsync(url);
+
+        httpResponse.EnsureSuccessStatusCode();
+
+        using Stream? strm = await httpResponse.Content.ReadAsStreamAsync();
+
+        using StreamReader streamReader = new StreamReader(strm);
+
+        return await streamReader.ReadToEndAsync();
     }
 
     public async Task GetPricingStreamAsync(string accountId, IList<string> instrumentList)

@@ -110,8 +110,6 @@ try
     }
 
     Console.WriteLine("Do algo");
-    
-    
 
     // await InitializationSequence.RunAsync();
 
