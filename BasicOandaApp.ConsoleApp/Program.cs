@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using NLog;
 using Oanda.RestApi.Models;
 using Oanda.RestApi.Services;
+using System.Diagnostics;
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -92,12 +93,27 @@ var log = AppState.Log = LogManager.GetCurrentClassLogger();
 //await restApi.AddOrderAsync(OANDA_ACCOUNT_ID, x);
 
 
-
-
-
 try
 {
-    await InitializationSequence.RunAsync();
+    AppState.Initialize();
+
+    var commands = ConsoleCommandParser.GetConsoleCommands();
+
+    if (commands.Any())
+    {
+        foreach (var command in commands)
+        {
+            command.Execute();
+        }
+
+        return;
+    }
+
+    Console.WriteLine("Do algo");
+    
+    
+
+    // await InitializationSequence.RunAsync();
 
     //var accountList = await restApi.GetAccountListAsync();
 }
@@ -110,6 +126,3 @@ finally
 {
     LogManager.Shutdown();
 }
-
-//Console.WriteLine("Press <ENTER> to exit.");
-//Console.ReadLine();
