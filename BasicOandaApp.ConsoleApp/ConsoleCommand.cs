@@ -130,6 +130,20 @@ internal class VersionConsoleCommand : ConsoleCommand
     }
 }
 
+internal class HelpConsoleCommand : ConsoleCommand
+{
+    private static Logger log = LogManager.GetCurrentClassLogger();
+
+    public const string NAME = "HELP";
+    
+    public HelpConsoleCommand() : base(COMMAND_PRIORITY.PRINT, NAME) { }
+
+    public override void Execute()
+    {
+        // TODO: Pending implementation
+    }
+}
+
 internal class DumpConsoleCommand : ConsoleCommand
 {
     private static Logger log = LogManager.GetCurrentClassLogger();
