@@ -1,4 +1,5 @@
 ﻿using BasicOandaApp.ConsoleApp;
+using BasicOandaApp.ConsoleApp.Models;
 using Microsoft.Extensions.Configuration;
 using NLog;
 using Oanda.RestApi.Models;
@@ -7,6 +8,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using BasicOandaApp.ConsoleApp.Extensions;
 
 var log = AppState.Log = LogManager.GetCurrentClassLogger();
 
@@ -92,6 +94,13 @@ var log = AppState.Log = LogManager.GetCurrentClassLogger();
 
 //await restApi.AddOrderAsync(OANDA_ACCOUNT_ID, x);
 
+string rawJson;
+using (StreamReader sr = new StreamReader("C:/src/github.com/ongzhixian/BasicOandaApp/dump/XAU_USD-H1-candles.json"))
+{
+    rawJson = sr.ReadToEnd();
+}
+var candleResponse = JsonSerializer.Deserialize<CandleResponse>(rawJson);
+IEnumerable<Ohlc>? ohlc = candleResponse.Candles.ToOhlcList(CandlestickType.Mid);
 
 try
 {

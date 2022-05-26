@@ -30,6 +30,13 @@ internal class CandlestickData
 
 }
 
+internal enum CandlestickType
+{
+    Bid,
+    Ask,
+    Mid
+}
+
 internal class Candlestick
 {
     [JsonPropertyName("time")]
