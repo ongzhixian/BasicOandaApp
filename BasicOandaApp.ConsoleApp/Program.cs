@@ -9,6 +9,8 @@ using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using BasicOandaApp.ConsoleApp.Extensions;
+using Microsoft.Data.Analysis;
+using BasicOandaApp.ConsoleApp.Services;
 
 var log = AppState.Log = LogManager.GetCurrentClassLogger();
 
@@ -99,8 +101,52 @@ using (StreamReader sr = new StreamReader("C:/src/github.com/ongzhixian/BasicOan
 {
     rawJson = sr.ReadToEnd();
 }
-var candleResponse = JsonSerializer.Deserialize<CandleResponse>(rawJson);
+
+JsonSerializerOptions opt = new JsonSerializerOptions(JsonSerializerDefaults.General)
+{
+    NumberHandling = JsonNumberHandling.AllowReadingFromString
+};
+
+var candleResponse = JsonSerializer.Deserialize<CandleResponse>(rawJson, opt);
 IEnumerable<Ohlc>? ohlc = candleResponse.Candles.ToOhlcList(CandlestickType.Mid);
+
+//const string TIME_COLUMN_NAME       = "t"; 
+//const string OPEN_COLUMN_NAME       = "o"; 
+//const string HIGH_COLUMN_NAME       = "h"; 
+//const string LOW_COLUMN_NAME        = "l"; 
+//const string CLOSE_COLUMN_NAME      = "c"; 
+//const string VOLUME_COLUMN_NAME     = "v"; 
+//const string COMPLETE_COLUMN_NAME   = "e";
+
+//const int TIME_COLUMN_INDEX = 0;
+//const int OPEN_COLUMN_INDEX = 1;
+//const int HIGH_COLUMN_INDEX = 2;
+//const int LOW_COLUMN_INDEX = 3;
+//const int CLOSE_COLUMN_INDEX = 4;
+//const int VOLUME_COLUMN_INDEX = 5;
+//const int COMPLETE_COLUMN_INDEX = 6;
+//const int MA_COLUMN_INDEX = 7;
+
+
+
+//var df = new DataFrame(
+//    new PrimitiveDataFrameColumn<DateTime>( TIME_COLUMN_NAME,       ohlc.Select(r => r.Time)),
+//    new PrimitiveDataFrameColumn<decimal>(  OPEN_COLUMN_NAME,       ohlc.Select(r => r.O)),
+//    new PrimitiveDataFrameColumn<decimal>(  HIGH_COLUMN_NAME,       ohlc.Select(r => r.H)),
+//    new PrimitiveDataFrameColumn<decimal>(  LOW_COLUMN_NAME,        ohlc.Select(r => r.L)),
+//    new PrimitiveDataFrameColumn<decimal>(  CLOSE_COLUMN_NAME,      ohlc.Select(r => r.C)),
+//    new PrimitiveDataFrameColumn<int>(      VOLUME_COLUMN_NAME,     ohlc.Select(r => r.Volume)),
+//    new PrimitiveDataFrameColumn<bool>(     COMPLETE_COLUMN_NAME,   ohlc.Select(r => r.Complete)),
+//    new PrimitiveDataFrameColumn<decimal>("x", ohlc.Count())
+//    );
+
+// MathNet.Numerics.Statistics.MovingStatistics ms = new MathNet.Numerics.Statistics.MovingStatistics(8)
+
+var df = candleResponse.Candles.ToDataFrame();
+df.Columns.Add(new PrimitiveDataFrameColumn<decimal>("sma", df.Rows.Count()));
+
+CalculationService.Sma(4, df[OhlcDataFrame.CLOSE_COLUMN_NAME], df["sma"]);
+
 
 try
 {

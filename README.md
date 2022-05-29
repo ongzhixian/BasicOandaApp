@@ -11,6 +11,8 @@ dotnet sln .\BasicOandaApp.sln add .\BasicOandaApp.ConsoleApp\
 dotnet add .\BasicOandaApp.ConsoleApp\ package Microsoft.Extensions.Configuration
 dotnet add .\BasicOandaApp.ConsoleApp\ package Microsoft.Extensions.Configuration.UserSecrets
 dotnet add .\BasicOandaApp.ConsoleApp\ package Microsoft.Extensions.Configuration.Json
+dotnet add .\BasicOandaApp.ConsoleApp\ package Microsoft.Data.Analysis
+dotnet add .\BasicOandaApp.ConsoleApp\ package MathNet.Numerics
 
 dotnet add .\BasicOandaApp.ConsoleApp\ package NLog
 
