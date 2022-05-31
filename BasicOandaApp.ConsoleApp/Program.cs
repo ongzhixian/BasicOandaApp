@@ -96,19 +96,21 @@ var log = AppState.Log = LogManager.GetCurrentClassLogger();
 
 //await restApi.AddOrderAsync(OANDA_ACCOUNT_ID, x);
 
-string rawJson;
-using (StreamReader sr = new StreamReader("C:/src/github.com/ongzhixian/BasicOandaApp/dump/XAU_USD-H1-candles.json"))
-{
-    rawJson = sr.ReadToEnd();
-}
+// string rawJson;
+// using (StreamReader sr = new StreamReader("./dump/XAU_USD-H1-candles.json"))
+// {
+//     rawJson = sr.ReadToEnd();
+// }
 
-JsonSerializerOptions opt = new JsonSerializerOptions(JsonSerializerDefaults.General)
-{
-    NumberHandling = JsonNumberHandling.AllowReadingFromString
-};
+// JsonSerializerOptions opt = new JsonSerializerOptions(JsonSerializerDefaults.General)
+// {
+//     NumberHandling = JsonNumberHandling.AllowReadingFromString
+// };
 
-var candleResponse = JsonSerializer.Deserialize<CandleResponse>(rawJson, opt);
-IEnumerable<Ohlc>? ohlc = candleResponse.Candles.ToOhlcList(CandlestickType.Mid);
+// var candleResponse = JsonSerializer.Deserialize<CandleResponse>(rawJson, opt);
+// IEnumerable<Ohlc>? ohlc = candleResponse.Candles.ToOhlcList(CandlestickType.Mid);
+
+
 
 //const string TIME_COLUMN_NAME       = "t"; 
 //const string OPEN_COLUMN_NAME       = "o"; 
@@ -142,10 +144,10 @@ IEnumerable<Ohlc>? ohlc = candleResponse.Candles.ToOhlcList(CandlestickType.Mid)
 
 // MathNet.Numerics.Statistics.MovingStatistics ms = new MathNet.Numerics.Statistics.MovingStatistics(8)
 
-var df = candleResponse.Candles.ToDataFrame();
-df.Columns.Add(new PrimitiveDataFrameColumn<decimal>("sma", df.Rows.Count()));
+//var df = candleResponse.Candles.ToDataFrame();
+//df.Columns.Add(new PrimitiveDataFrameColumn<decimal>("sma", df.Rows.Count()));
 
-CalculationService.Sma(4, df[OhlcDataFrame.CLOSE_COLUMN_NAME], df["sma"]);
+//CalculationService.Sma(4, df[OhlcDataFrame.CLOSE_COLUMN_NAME], df["sma"]);
 
 
 try

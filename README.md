@@ -22,9 +22,7 @@ dotnet user-secrets --project .\BasicOandaApp.ConsoleApp\ init
 dotnet user-secrets --project .\BasicOandaApp.ConsoleApp\ set "oanda:practice:ApiKey" "<api-key>"
 dotnet user-secrets --project .\BasicOandaApp.ConsoleApp\ set "oanda:account:id" "<account-id>"
 
-
 ```
-
 
 Other ways to extend configuration
 
@@ -34,6 +32,17 @@ Microsoft.Extensions.Configuration.CommandLine
 Microsoft.Extensions.Configuration.Binder 
 Microsoft.Extensions.Configuration.EnvironmentVariables
 ```
+
+## Candlestock Simulator
+
+A simple application to playback candlestick data from a file.
+
+
+```ps1: In C:\src\github.com\ongzhixian\BasicOandaApp
+dotnet new console -n BasicOandaApp.CandlestockSimulator
+dotnet sln .\BasicOandaApp.sln add .\BasicOandaApp.CandlestockSimulator\
+```
+
 
 ## Secrets
 
